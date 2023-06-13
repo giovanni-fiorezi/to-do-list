@@ -2,6 +2,7 @@ package br.com.todolist.converter;
 
 import br.com.todolist.dto.TaskDto;
 import br.com.todolist.model.TaskEntity;
+import br.com.todolist.model.TaskStatus;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,6 +18,7 @@ public class TaskEntityConverter {
                 .description(dto.getDescription())
                 .dueDate(agora.format(formatter)) /* pegar a data e hora atual que foi salvo */
                 .completed(dto.getCompleted())
+                .status(TaskStatus.NAO_INICIADA)
                 .build();
     }
 }

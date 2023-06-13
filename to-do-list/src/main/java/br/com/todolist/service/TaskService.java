@@ -4,6 +4,7 @@ import br.com.todolist.converter.TaskDtoConverter;
 import br.com.todolist.converter.TaskEntityConverter;
 import br.com.todolist.dto.TaskDto;
 import br.com.todolist.model.TaskEntity;
+import br.com.todolist.model.TaskStatus;
 import br.com.todolist.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,20 +22,21 @@ public class TaskService {
     public TaskDto create(TaskDto taskDto) {
         try {
             TaskEntity taskEntity = taskRepository.save(TaskEntityConverter.fromDto(taskDto));
+            taskEntity.setStatus(TaskStatus.NAO_INICIADA);
             return TaskDtoConverter.fromEntity(taskEntity);
         } catch (Exception e) {
             throw new RuntimeException("Ocorreu um erro ao salvar uma nova tarefa.");
         }
     }
 
-    public TaskDto update(String id) {
+    public TaskDto update(TaskDto dto) {
         try {
-            Optional<TaskEntity> idTask = taskRepository.findById(id);
-            if(idTask.isEmpty()) {
-                throw new Exception("Não existe o id informado");
+            Optional<TaskEntity> idTask = taskRepository.findById(dto.getId());
+            if (idTask.isEmpty()) {
+                throw new RuntimeException("Não existe o id informado");
             }
-            TaskEntity taskEntity = taskRepository.save(idTask.get());
-            return TaskDtoConverter.fromEntity(taskEntity);
+            TaskEntity save = taskRepository.save(TaskEntityConverter.fromDto(dto));
+            return TaskDtoConverter.fromEntity(save);
         } catch(Exception e) {
             throw new RuntimeException("Ocorreu um erro ao buscar o id da tarefa");
         }
@@ -70,16 +72,12 @@ public class TaskService {
         if(titleContaining.isEmpty()) {
             throw new RuntimeException("Titulo nao encontrado.");
         }
-        return titleContaining.stream()
-                .map(TaskDtoConverter::fromEntity)
-                .collect(Collectors.toList());
+        return titleContaining.stream().map(TaskDtoConverter::fromEntity).collect(Collectors.toList());
     }
 
     public List<TaskDto> findAll() {
         try {
-            return taskRepository.findAll()
-                    .stream()
-                    .map(TaskDtoConverter::fromEntity)
+            return taskRepository.findAll().stream().map(TaskDtoConverter::fromEntity)
                     .collect(Collectors.toList());
         } catch (Exception e) {
             throw new RuntimeException("Ocorreu um erro ao listar todas as tarefas.");

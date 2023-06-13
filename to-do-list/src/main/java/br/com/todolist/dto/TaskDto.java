@@ -1,5 +1,6 @@
 package br.com.todolist.dto;
 
+import br.com.todolist.model.TaskStatus;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,4 +16,5 @@ public class TaskDto {
     private String description;
     private String dueDate;
     private LocalDate completed;
+    private TaskStatus status;
 }

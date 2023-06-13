@@ -5,7 +5,6 @@ import br.com.todolist.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.config.Task;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,10 +21,10 @@ public class TaskResource {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.create(dto));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<TaskDto> update(@PathVariable String id) {
-        TaskDto dto = taskService.update(id);
-        return ResponseEntity.status(HttpStatus.OK).body(dto);
+    @PutMapping
+    public ResponseEntity<TaskDto> update(@RequestBody TaskDto dto) {
+        TaskDto taskDto = taskService.update(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(taskDto);
     }
 
     @DeleteMapping("/{id}")
